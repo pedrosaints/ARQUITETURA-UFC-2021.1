@@ -13,6 +13,8 @@ import sys
 #  mov _, L       => V[L] = _
 #  if_zero _, N   => if _ = 0 goto N
 #  goto N         => goto N
+#  ++ _           => _ = _ + 1
+#  -- _           => _ = _ - 1
 
 # OBS: Any function can be preceded by a label (N)
 
