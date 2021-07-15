@@ -183,9 +183,6 @@ def alu(control_bits):
         o = ~b
     elif control_bits == 0b111100:
         o = a + b
-        # print('o:')
-        # print(a)
-        # print(b)
     elif control_bits == 0b111101:
         o = a + b + 1
     elif control_bits == 0b111001:

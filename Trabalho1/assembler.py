@@ -1,10 +1,20 @@
 import sys
 
+# LEGEND
+# _ => X or Y
+# L => Variable's label
+# N => Line's label
+# V[L] => Variable with label L
+
 # FUNCTIONS LIST
 
-#
+#  += _, L        => _ = _ + V[L]
+#  -= _, L        => _ = _ - V[L]
+#  mov _, L       => V[L] = _
+#  if_zero _, N   => if _ = 0 goto N
+#  goto N         => goto N
 
-
+# OBS: Any function can be preceded by a label (N)
 
 fsrc = open(str(sys.argv[1]), 'r')
 
