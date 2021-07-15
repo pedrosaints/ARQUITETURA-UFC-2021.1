@@ -1,11 +1,13 @@
      goto main
      wb 0
 
-a    ww 0
-b    ww 2
-c    ww 2
+res  ww 0
+A    ww 5
 
-main add x, b
-     add x, c
-     mov x, a
-     halt
+hlt  halt
+main += x, A
+loop -- x
+     if_zero  x, end
+     goto loop
+end  mov x, res
+     goto hlt

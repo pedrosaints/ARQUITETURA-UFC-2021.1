@@ -2,21 +2,11 @@
      wb 0
 
 res  ww 0
-A    ww 256
-B    ww 301
-c1   ww 1
-
-main += x, A
-     ++ x
-     -- x
-     ++ x
-     if_zero  x, jmp
-
-
-     mov x, res
+A    ww 5
+B    ww 10
 
 hlt  halt
-
-jmp  += x, c1
-     mov x, res
+main += x, A
+     += y, B
+     mov y, res
      goto hlt

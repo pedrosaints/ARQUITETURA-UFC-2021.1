@@ -77,6 +77,51 @@ firmware[17] = 0b00000000000000110101000100000011
 firmware[18] = 0b00000000000000110110000100000011
 # X <- X - 1; GOTO MAIN;
 
+# Y = Y + mem[address]
+firmware[19] = 0b00001010000000110101001000001001
+# PC <- PC + 1; MBR <- read_byte(PC); GOTO 3
+firmware[20] = 0b00001010100000010100100000010010
+# MAR <- MBR; read_word; GOTO 4
+firmware[21] = 0b00001011000000010100000001000000
+# H <- MDR; GOTO 5
+firmware[22] = 0b00000000000000111100000010000100
+# Y <- Y + H; GOTO MAIN;
+
+# Y = Y + 1
+firmware[23] = 0b00000000000000110101000010000100
+# Y <- Y + 1; GOTO MAIN;
+
+# Y = Y - 1
+firmware[24] = 0b00000000000000110110000010000100
+# Y <- Y - 1; GOTO MAIN;
+
+# Y = Y - mem[address]
+firmware[25] = 0b00000111000000110101001000001001
+# PC <- PC + 1; fetch;
+firmware[26] = 0b00000111100000010100100000010010
+# MAR <- MBR; read;
+firmware[27] = 0b00001000000000010100000001000000
+# H <- MDR;
+firmware[28] = 0b00000000000000111111000010000100
+# Y <- Y - H; GOTO MAIN;
+
+# mem[address] = Y
+firmware[29] = 0b00001111000000110101001000001001
+# PC <- PC + 1; fetch; GOTO 30
+firmware[30] = 0b00001111100000010100100000000010
+# MAR <- MBR; GOTO 31
+firmware[31] = 0b00000000000000010100010000100100
+# MDR <- Y; write; GOTO MAIN
+
+# if Y = 0 goto address
+firmware[32] = 0b00010000100100010100000010000100
+# Y <- Y; IF ALU = 0 GOTO 289 (100100001) ELSE GOTO 33 (000100001);
+firmware[33] = 0b00000000000000110101001000000001
+# PC <- PC + 1; GOTO MAIN;
+firmware[289] = 0b10010001000000110101001000001001
+# PC <- PC + 1; fetch; GOTO 269
+firmware[290] = 0b00000000010000010100001000001010
+# PC <- MBR; fetch; GOTO MBR;
 
 def read_regs(reg_num):
     global BUS_A, BUS_B, H, MDR, PC, MBR, X, Y
@@ -108,9 +153,12 @@ def write_regs(reg_bits):
         PC = BUS_C
     if reg_bits & 0b000100:
         X = BUS_C
-        print(X)
+        # print('x:')
+        # print(X)
     if reg_bits & 0b000010:
         Y = BUS_C
+        # print('y:')
+        # print(Y)
     if reg_bits & 0b000001:
         H = BUS_C
 
@@ -135,6 +183,9 @@ def alu(control_bits):
         o = ~b
     elif control_bits == 0b111100:
         o = a + b
+        # print('o:')
+        # print(a)
+        # print(b)
     elif control_bits == 0b111101:
         o = a + b + 1
     elif control_bits == 0b111001:

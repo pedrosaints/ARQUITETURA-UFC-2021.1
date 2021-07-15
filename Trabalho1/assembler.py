@@ -1,5 +1,11 @@
 import sys
 
+# FUNCTIONS LIST
+
+#
+
+
+
 fsrc = open(str(sys.argv[1]), 'r')
 
 lines = []
@@ -7,13 +13,19 @@ lines_bin = []
 names = []
 
 instructions = ['+=', '-=', '++', '--', 'goto', 'mov', 'if_zero', 'halt', 'wb', 'ww']
-instruction_set = {'+=': 0x02,
-                   '-=': 0x0D,
-                   '++': 0x11,
-                   '--': 0x12,
+instruction_set = {'+=x': 0x02,
+                   '-=x': 0x0D,
+                   '+=y': 0x13,
+                   '-=y': 0x19,
+                   '++x': 0x11,
+                   '++y': 0x17,
+                   '--x': 0x12,
+                   '--y': 0x18,
                    'goto': 0x09,
-                   'mov': 0x06,
-                   'if_zero': 0x0B,
+                   'movx': 0x06,
+                   'movy': 0x1D,
+                   'if_zerox': 0x0B,
+                   'if_zeroy': 0x20,
                    'halt': 0xFF}
 
 
@@ -42,7 +54,11 @@ def encode_2ops(inst, ops):
     if len(ops) > 1:
         if ops[0] == 'x':
             if is_name(ops[1]):
-                line_bin.append(instruction_set[inst])
+                line_bin.append(instruction_set[inst + ops[0]])
+                line_bin.append(ops[1])
+        if ops[0] == 'y':
+            if is_name(ops[1]):
+                line_bin.append(instruction_set[inst + ops[0]])
                 line_bin.append(ops[1])
     return line_bin
 
@@ -61,9 +77,13 @@ def encode_halt():
     line_bin.append(instruction_set['halt'])
     return line_bin
 
-def encode_sucessor_antecessor(inst):
+def encode_sucessor_antecessor(inst,ops):
     line_bin = []
-    line_bin.append(instruction_set[inst])
+    # UTILIZO ESSE IF PARA GARANTIR QUE O ops E UM REGISTRADOR EXISTENTE
+    if ops[0] == 'x':
+        line_bin.append(instruction_set[inst + ops[0]])
+    if ops[0] == 'y':
+        line_bin.append(instruction_set[inst + ops[0]])
     return line_bin
 
 
@@ -97,7 +117,7 @@ def encode_instruction(inst, ops):
     elif inst == 'halt':
         return encode_halt()
     elif inst == '++' or inst == '--':
-        return encode_sucessor_antecessor(inst)
+        return encode_sucessor_antecessor(inst, ops)
     elif inst == 'wb':
         return encode_wb(ops)
     elif inst == 'ww':
@@ -159,8 +179,9 @@ def resolve_names():
     for line in lines_bin:
         for i in range(0, len(line)):
             if is_name(line[i]):
-                if line[i - 1] == instruction_set['+='] or line[i - 1] == instruction_set['-='] or line[i - 1] == \
-                        instruction_set['mov']:
+                if line[i - 1] == instruction_set['+=x'] or line[i - 1] == instruction_set['-=x'] or line[i - 1] == \
+                        instruction_set['+=y'] or line[i - 1] == instruction_set['-=y'] or line[i - 1] == \
+                        instruction_set['movx'] or line[i - 1] == instruction_set['movy']:
                     line[i] = get_name_byte(line[i]) // 4
                 else:
                     line[i] = get_name_byte(line[i])
@@ -176,7 +197,7 @@ for line in fsrc:
         i += 1
     if len(tokens) > 0:
         lines.append(tokens)
-print(lines)
+# print(lines)
 
 find_names()
 if lines_to_bin_step1():
@@ -189,5 +210,5 @@ if lines_to_bin_step1():
     fdst.write(bytearray(byte_arr))
     fdst.close()
 
-print(lines_bin)
+# print(lines_bin)
 fsrc.close()
