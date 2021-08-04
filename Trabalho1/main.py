@@ -5,7 +5,7 @@ def init():
 init()
 
 # ANOTAÇOES
-# firmware[X] = 0b 000000100 000 00 111100 010000 000 000
+# firmware[X] = 0b 000000100 000 00 111100 0100000 000 000
 #                   NEXT_I   JAM NZ  ALU     REG  M_IO R_Reg
 
 # COMANDO

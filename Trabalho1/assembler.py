@@ -24,15 +24,17 @@ lines = []
 lines_bin = []
 names = []
 
-instructions = ['+=', '-=', '++', '--', 'goto', 'mov', 'if_zero', 'halt', 'wb', 'ww']
+instructions = ['+=', '-=', '++', '--', 'goto', 'mov', 'if_zero', 'halt', 'wb', 'ww', '*']
 instruction_set = {'+=x': 0x02,
                    '-=x': 0x0D,
                    '+=y': 0x13,
                    '-=y': 0x19,
+                    '+=v': 0x26,
                    '++x': 0x11,
                    '++y': 0x17,
                    '--x': 0x12,
                    '--y': 0x18,
+                   '*': 0x22,
                    'goto': 0x09,
                    'movx': 0x06,
                    'movy': 0x1D,
@@ -69,6 +71,10 @@ def encode_2ops(inst, ops):
                 line_bin.append(instruction_set[inst + ops[0]])
                 line_bin.append(ops[1])
         if ops[0] == 'y':
+            if is_name(ops[1]):
+                line_bin.append(instruction_set[inst + ops[0]])
+                line_bin.append(ops[1])
+        if ops[0] == 'v':
             if is_name(ops[1]):
                 line_bin.append(instruction_set[inst + ops[0]])
                 line_bin.append(ops[1])
@@ -120,6 +126,18 @@ def encode_ww(ops):
                 line_bin.append((val & 0xFF000000) >> 24)
     return line_bin
 
+def encode_mult(ops):
+    line_bin = []
+    if len(ops) == 3:
+        ops_aux = ["y",ops[0]]
+        line_bin = line_bin + encode_2ops("+=", ops_aux)
+        ops_aux = ["v", ops[1]]
+        line_bin = line_bin + encode_2ops("+=", ops_aux)
+        line_bin.append(instruction_set['*'])
+        ops_aux = ["x", ops[2]]
+        line_bin = line_bin + encode_2ops("mov", ops_aux)
+    return line_bin
+
 
 def encode_instruction(inst, ops):
     if inst == '+=' or inst == '-=' or inst == 'mov' or inst == 'if_zero':
@@ -134,6 +152,8 @@ def encode_instruction(inst, ops):
         return encode_wb(ops)
     elif inst == 'ww':
         return encode_ww(ops)
+    elif inst == '*':
+        return encode_mult(ops)
     else:
         return []
 
@@ -193,6 +213,7 @@ def resolve_names():
             if is_name(line[i]):
                 if line[i - 1] == instruction_set['+=x'] or line[i - 1] == instruction_set['-=x'] or line[i - 1] == \
                         instruction_set['+=y'] or line[i - 1] == instruction_set['-=y'] or line[i - 1] == \
+                        instruction_set['+=v'] or line[i - 1] == \
                         instruction_set['movx'] or line[i - 1] == instruction_set['movy']:
                     line[i] = get_name_byte(line[i]) // 4
                 else:
