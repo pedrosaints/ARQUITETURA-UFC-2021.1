@@ -152,6 +152,9 @@ def encode_ww(ops):
 def encode_mult(ops):
     line_bin = []
     if len(ops) == 3:
+        line_bin = line_bin + encode_1ops("zera", "y")
+        line_bin = line_bin + encode_1ops("zera", "v")
+        line_bin = line_bin + encode_1ops("zera", "x")
         ops_aux = ["y",ops[0]]
         line_bin = line_bin + encode_2ops("+=", ops_aux)
         ops_aux = ["v", ops[1]]
