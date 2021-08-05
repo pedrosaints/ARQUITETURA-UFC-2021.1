@@ -5,13 +5,12 @@ def init():
 init()
 
 # ANOTAÇOES
-# firmware[X] = 0b 000000100 000 00 111100 0100000 000 000
+# firmware[X] = 0b 000000100 000 00 111100 01000000 000 000
 #                   NEXT_I   JAM NZ  ALU     REG  M_IO R_Reg
 
 # COMANDO
 # montar: python3 assembler.py prog0.asm prog0.bin
-# rodar: python3 computador_disk.py
-
+# rodar: python3 computador_arq.py prog0.bin
 
 import ufc2x as cpu
 import memory as mem
