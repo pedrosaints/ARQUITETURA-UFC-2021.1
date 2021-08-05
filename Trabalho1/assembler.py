@@ -199,6 +199,7 @@ def lines_to_bin_step1():
         line_bin = line_to_bin_step1(line)
         if line_bin == []:
             print("Erro de sintaxe na linha ", lines.index(line))
+            print(line)
             return False
         lines_bin.append(line_bin)
     return True

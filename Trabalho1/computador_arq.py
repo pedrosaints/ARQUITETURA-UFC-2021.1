@@ -6,9 +6,7 @@ import disk
 
 def init():
     disc = 'ARQUITETURA DE COMPUTADORES - PROJETO'
-    print(f'AUTOR: Pedro H Santos B, {disc} \n')  # Press Ctrl+F8 to toggle the breakpoint.
-
-init()
+    print(f'\n\n{disc} \nAUTORES:\n    * Pedro Henrique Santos Barros - 415083\n    * Joao Pedro Goncalves Rocha Ribeiro - 470895')
 
 # ANOTAÇOES
 # firmware[X] = 0b 000000100 000 00 111100 01000000 000 000
@@ -18,12 +16,15 @@ init()
 # montar: python3 assembler.py prog0.asm prog0.bin
 # rodar: python3 computador_arq.py prog0.bin
 
+init()
+
 disk.read(str(sys.argv[1]))
+print("\nExecutando Arquivo: ", str(sys.argv[1]))
 
-print("Antes: ", mem.read_word(1))
-
+print("\nEntrada Word 1: ", mem.read_word(1))
+print("\nComputando...\n")
 clk.start([cpu])
 
-print("Depois: ", mem.read_word(1))
+print("\nSaida Word 1: ", mem.read_word(1))
 
 
