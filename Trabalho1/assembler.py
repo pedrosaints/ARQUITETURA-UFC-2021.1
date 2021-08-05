@@ -31,20 +31,26 @@ instruction_set = {'+=x': 0x02,
                    '-=y': 0x19,
                     '+=v': 0x26,
                     '-=v': 0x2C,
+                    '+=s': 0x35,
+                    '-=s': 0x39,
                    '++x': 0x11,
                    '++y': 0x17,
                    '++v': 0x2A,
+                   '++s': 0x3D,
                    '--x': 0x12,
                    '--y': 0x18,
                    '--v': 0x2B,
+                   '--s': 0x3E,
                    '*': 0x22,
                    'goto': 0x09,
                    'movx': 0x06,
                    'movy': 0x1D,
                    'movv': 0x30,
+                   'movs': 0x3F,
                    'if_zerox': 0x0B,
                    'if_zeroy': 0x20,
                    'if_zerov': 0x33,
+                   'if_zeros': 0x42,
                    'halt': 0xFF}
 
 
@@ -83,6 +89,10 @@ def encode_2ops(inst, ops):
             if is_name(ops[1]):
                 line_bin.append(instruction_set[inst + ops[0]])
                 line_bin.append(ops[1])
+        if ops[0] == 's':
+            if is_name(ops[1]):
+                line_bin.append(instruction_set[inst + ops[0]])
+                line_bin.append(ops[1])
     return line_bin
 
 
@@ -108,6 +118,8 @@ def encode_sucessor_antecessor(inst,ops):
     if ops[0] == 'y':
         line_bin.append(instruction_set[inst + ops[0]])
     if ops[0] == 'v':
+        line_bin.append(instruction_set[inst + ops[0]])
+    if ops[0] == 's':
         line_bin.append(instruction_set[inst + ops[0]])
     return line_bin
 
@@ -221,7 +233,8 @@ def resolve_names():
                 if line[i - 1] == instruction_set['+=x'] or line[i - 1] == instruction_set['-=x'] or line[i - 1] == \
                         instruction_set['+=y'] or line[i - 1] == instruction_set['-=y'] or line[i - 1] == \
                         instruction_set['+=v'] or line[i - 1] == instruction_set['-=v'] or line[i - 1] == \
-                        instruction_set['movx'] or line[i - 1] == instruction_set['movy'] or line[i - 1] == instruction_set['movv']:
+                        instruction_set['+=s'] or line[i - 1] == instruction_set['-=s'] or line[i - 1] == \
+                        instruction_set['movx'] or line[i - 1] == instruction_set['movy'] or line[i - 1] == instruction_set['movv'] or line[i - 1] == instruction_set['movs']:
                     line[i] = get_name_byte(line[i]) // 4
                 else:
                     line[i] = get_name_byte(line[i])

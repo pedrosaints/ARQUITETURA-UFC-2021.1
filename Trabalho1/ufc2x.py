@@ -178,12 +178,58 @@ firmware[50] = 0b0000000000000001010001000000100101
 
 # if V = 0 goto address
 firmware[51] = 0b0001101000010001010000000010000101
-# V <- V; IF ALU = 0 GOTO 308 (100110100) ELSE GOTO 33 (000110100);
+# V <- V; IF ALU = 0 GOTO 308 (100110100) ELSE GOTO 52 (000110100);
 firmware[52] = 0b0000000000000011010100100000000001
 # PC <- PC + 1; GOTO MAIN;
 firmware[308] = 0b1001101010000011010100100000001001
 # PC <- PC + 1; fetch; GOTO 290
 firmware[309] = 0b0000000001000001010000100000001010
+# PC <- MBR; fetch; GOTO MBR;
+
+# S = S + mem[address]
+firmware[53] = 0b0001101100000011010100100000001001
+# PC <- PC + 1; MBR <- read_byte(PC); GOTO 54
+firmware[54] = 0b0001101110000001010010000000010010
+# MAR <- MBR; read_word; GOTO 55
+firmware[55] = 0b0001110000000001010000000100000000
+# H <- MDR; GOTO 56
+firmware[56] = 0b0000000000000011110000000001000110
+# S <- S + H; GOTO MAIN;
+
+# S = S - mem[address]
+firmware[57] = 0b0001110100000011010100100000001001
+# PC <- PC + 1; fetch;
+firmware[58] = 0b0001110110000001010010000000010010
+# MAR <- MBR; read;
+firmware[59] = 0b0001111000000001010000000100000000
+# H <- MDR;
+firmware[60] = 0b0000000000000011111100000001000110
+# S <- S - H; GOTO MAIN;
+
+# S = S + 1
+firmware[61] = 0b0000000000000011010100000001000110
+# S <- S + 1; GOTO MAIN;
+
+# S = S - 1
+firmware[62] = 0b0000000000000011011000000001000110
+# S <- S - 1; GOTO MAIN;
+
+# mem[address] = S
+firmware[63] = 0b0010000000000011010100100000001001
+# PC <- PC + 1; fetch; GOTO 64
+firmware[64] = 0b0010000010000001010010000000000010
+# MAR <- MBR; GOTO 65
+firmware[65] = 0b0000000000000001010001000000100110
+# MDR <- S; write; GOTO MAIN
+
+# if S = 0 goto address
+firmware[66] = 0b0010000110010001010000000001000110
+# S <- S; IF ALU = 0 GOTO 323 (101000011) ELSE GOTO 67 (001000011);
+firmware[67] = 0b0000000000000011010100100000000001
+# PC <- PC + 1; GOTO MAIN;
+firmware[323] = 0b1010001000000011010100100000001001
+# PC <- PC + 1; fetch; GOTO 290
+firmware[324] = 0b0000000001000001010000100000001010
 # PC <- MBR; fetch; GOTO MBR;
 
 def read_regs(reg_num):
@@ -220,20 +266,14 @@ def write_regs(reg_bits):
         PC = BUS_C
     if reg_bits & 0b00010000:
         X = BUS_C
-        # print("X")
-        # print(X)
     if reg_bits & 0b00001000:
         Y = BUS_C
-        # print("Y")
-        # print(Y)
     if reg_bits & 0b00000100:
         H = BUS_C
     if reg_bits & 0b00000010:
         V = BUS_C
     if reg_bits & 0b00000001:
         S = BUS_C
-        # print("S")
-        # print(S)
 
 
 def alu(control_bits):
