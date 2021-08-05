@@ -24,7 +24,7 @@ lines = []
 lines_bin = []
 names = []
 
-instructions = ['+=', '-=', '++', '--', 'goto', 'mov', 'if_zero', 'halt', 'wb', 'ww', '*']
+instructions = ['+=', '-=', '++', '--', 'zera','goto', 'mov', 'if_zero', 'halt', 'wb', 'ww', '*']
 instruction_set = {'+=x': 0x02,
                    '-=x': 0x0D,
                    '+=y': 0x13,
@@ -41,6 +41,10 @@ instruction_set = {'+=x': 0x02,
                    '--y': 0x18,
                    '--v': 0x2B,
                    '--s': 0x3E,
+                    'zerax': 0x44,
+                    'zeray': 0x45,
+                    'zerav': 0x46,
+                    'zeras': 0x47,
                    '*': 0x22,
                    'goto': 0x09,
                    'movx': 0x06,
@@ -110,7 +114,7 @@ def encode_halt():
     line_bin.append(instruction_set['halt'])
     return line_bin
 
-def encode_sucessor_antecessor(inst,ops):
+def encode_1ops(inst,ops):
     line_bin = []
     # UTILIZO ESSE IF PARA GARANTIR QUE O ops E UM REGISTRADOR EXISTENTE
     if ops[0] == 'x':
@@ -165,8 +169,8 @@ def encode_instruction(inst, ops):
         return encode_goto(ops)
     elif inst == 'halt':
         return encode_halt()
-    elif inst == '++' or inst == '--':
-        return encode_sucessor_antecessor(inst, ops)
+    elif inst == '++' or inst == '--' or inst == 'zera':
+        return encode_1ops(inst, ops)
     elif inst == 'wb':
         return encode_wb(ops)
     elif inst == 'ww':
