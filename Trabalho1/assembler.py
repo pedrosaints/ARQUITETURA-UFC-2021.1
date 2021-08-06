@@ -24,7 +24,7 @@ lines = []
 lines_bin = []
 names = []
 
-instructions = ['+=', '-=', '++', '--', 'zera','goto', 'mov', 'if_zero', 'halt', 'wb', 'ww', '*']
+instructions = ['+=', '-=', '++', '--', 'zera','goto', 'mov', 'if_zero', 'halt', 'wb', 'ww', '*', '>', '<', '=']
 instruction_set = {'+=x': 0x02,
                    '-=x': 0x0D,
                    '+=y': 0x13,
@@ -46,6 +46,9 @@ instruction_set = {'+=x': 0x02,
                     'zerav': 0x46,
                     'zeras': 0x47,
                    '*': 0x22,
+                   '>': 0x48,
+                   '<': 0x4E,
+                   '=': 0x54,
                    'goto': 0x09,
                    'movx': 0x06,
                    'movy': 0x1D,
@@ -149,7 +152,7 @@ def encode_ww(ops):
                 line_bin.append((val & 0xFF000000) >> 24)
     return line_bin
 
-def encode_mult(ops):
+def encode_3ops(inst, ops):
     line_bin = []
     if len(ops) == 3:
         line_bin = line_bin + encode_1ops("zera", "y")
@@ -159,7 +162,7 @@ def encode_mult(ops):
         line_bin = line_bin + encode_2ops("+=", ops_aux)
         ops_aux = ["v", ops[1]]
         line_bin = line_bin + encode_2ops("+=", ops_aux)
-        line_bin.append(instruction_set['*'])
+        line_bin.append(instruction_set[inst])
         ops_aux = ["x", ops[2]]
         line_bin = line_bin + encode_2ops("mov", ops_aux)
     return line_bin
@@ -178,8 +181,8 @@ def encode_instruction(inst, ops):
         return encode_wb(ops)
     elif inst == 'ww':
         return encode_ww(ops)
-    elif inst == '*':
-        return encode_mult(ops)
+    elif inst == '*' or inst == '>' or inst == '<' or inst == '=':
+        return encode_3ops(inst, ops)
     else:
         return []
 
