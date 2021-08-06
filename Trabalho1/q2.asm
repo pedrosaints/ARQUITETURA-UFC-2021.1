@@ -2,6 +2,8 @@ goto main
      wb 0
 
 res  ww 12
+
+
 A    ww 1
 B    ww 0
 

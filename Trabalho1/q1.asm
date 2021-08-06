@@ -2,6 +2,8 @@ goto main
      wb 0
 
 res  ww 10
+
+
 A    ww 0
 
 hlt  halt
