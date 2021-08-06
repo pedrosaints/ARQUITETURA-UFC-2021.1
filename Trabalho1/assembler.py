@@ -169,8 +169,6 @@ def encode_3ops(inst, ops):
     return line_bin
 
 def encode_2(inst, ops):
-    print(inst)
-    print(ops)
     line_bin = []
     if len(ops) == 2:
         line_bin = line_bin + encode_1ops("zera", "y")
