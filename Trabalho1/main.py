@@ -1,28 +1,53 @@
-def init():
-    disc = 'ARQUITETURA DE COMPUTADORES - PROJETO'
-    print(f'AUTOR: Pedro H Santos B, {disc} \n')  # Press Ctrl+F8 to toggle the breakpoint.
-
-init()
-
-# ANOTAÇOES
-# NZ 01 *2  ----- 10  /2  -----  11 * 0
-# firmware[X] = 0b 000000100 000 00 111100 01000000 000 000
-#                   NEXT_I   JAM NZ  ALU     REG  M_IO R_Reg
-
-# COMANDO
-# montar: python3 assembler.py prog0.asm prog0.bin
-# rodar: python3 computador_arq.py prog0.bin
-
 import ufc2x as cpu
+import sys
 import memory as mem
 import clock as clk
 import disk
 
-disk.read('prog0.bin')
+def init():
+    disc = 'ARQUITETURA DE COMPUTADORES - PROJETO'
+    print(f'\n\n{disc} \nAUTORES:\n    * Pedro Henrique Santos Barros - 415083\n    * Joao Pedro Goncalves Rocha Ribeiro - 470895')
 
-print("Antes: ", mem.read_word(1))
+# LEGENDA P/ ASSEMBLE NO ARQUIVO assembler.py
 
+# A palavra de entrada 1 está representada nos algoritmos como:
+
+# res  ww _
+
+# onde _ representa o valor de entrada
+
+
+# COMANDOS
+
+# QUESTAO 1 - FATORIAL DE n
+# MONTAR: python3 assembler.py q1.asm q1.bin
+# RODAR: python3 main.py q1.bin
+
+# QUESTAO 1 - FATORIAL DE n
+# MONTAR: python3 assembler.py q1.asm q1.bin
+# RODAR: python3 main.py q1.bin
+
+# QUESTAO 2 - n-ESIMO VALOR NA SEQUENCIA FIBONACCI
+# MONTAR: python3 assembler.py q2.asm q2.bin
+# RODAR: python3 main.py q2.bin
+
+# QUESTAO 3 - VERIFICA SE n E PRIMO, 1 SE SIM, 0 SE NAO
+# MONTAR: python3 assembler.py q3.asm q3.bin
+# RODAR: python3 main.py q3.bin
+
+# QUESTAO 4 - ALTURA DE UMA ARVORE BINARIA DE n NOS
+# MONTAR: python3 assembler.py q4.asm q4.bin
+# RODAR: python3 main.py q4.bin
+
+init()
+
+disk.read(str(sys.argv[1]))
+print("\nExecutando Arquivo: ", str(sys.argv[1]))
+
+print("\nEntrada Word 1: ", mem.read_word(1))
+print("\nComputando...\n")
 clk.start([cpu])
 
-print("Depois: ", mem.read_word(1))
+print("\nSaida Word 1: ", mem.read_word(1))
+
 

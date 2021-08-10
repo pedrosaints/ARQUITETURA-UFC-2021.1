@@ -10,6 +10,11 @@ import sys
 
 #  += _, L        => _ = _ + V[L]
 #  -= _, L        => _ = _ - V[L]
+#  ^2 L1, L2  => V[L2] = 2^V[L1]
+#  *  L1, L2, L3  => V[L3] = V[L2] * V[L1]
+#  >  L1, L2, L3  => V[L3] = 1 IF V[L2] > V[L1], V[L3] = 0 ELSE
+#  <  L1, L2, L3  => V[L3] = 1 IF V[L2] < V[L1], V[L3] = 0 ELSE
+#  =  L1, L2, L3  => V[L3] = 1 IF V[L2] = V[L1], V[L3] = 0 ELSE
 #  mov _, L       => V[L] = _
 #  if_zero _, N   => if _ = 0 goto N
 #  goto N         => goto N
